@@ -4,4 +4,5 @@ export interface Task {
   description: string | null;
   status: string | null;
   dueDate: string | null;
+  userId: number | null;
 }

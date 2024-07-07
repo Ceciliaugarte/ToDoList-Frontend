@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppRootState } from "../Redux/storeConfig";
+import { formatDateYYYYMMDD } from "../utils/dateUtils";
+import { updateUserTask } from "../Redux/reducers/userReducer";
 
 interface Task {
   title: string;
@@ -22,6 +24,7 @@ const UpdateTaskForm: React.FC = () => {
 
   const params = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getCurrentTask = async () => {
@@ -38,6 +41,10 @@ const UpdateTaskForm: React.FC = () => {
           },
         });
         setCurrentTask(response.data);
+        setTitle(response.data.title);
+        setDescription(response.data.description);
+        setDueDate(response.data.dueDate);
+        setStatus(response.data.status);
       } catch (error) {
         console.log(error);
       }
@@ -45,9 +52,40 @@ const UpdateTaskForm: React.FC = () => {
     getCurrentTask();
   }, [params.id, user]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // const updatedTask: Task = { title, description, dueDate, status };
+    try {
+      const formattedDueDate =
+        new Date(dueDate).toISOString().split(".")[0] + ".000Z";
+      await axios({
+        method: "PATCH",
+        url: `${import.meta.env.VITE_API_URL}/tasks/${params.id}`,
+        data: {
+          id: Number(params.id),
+          userId: user.id,
+          title,
+          description,
+          dueDate: formattedDueDate,
+          status,
+        },
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      dispatch(
+        updateUserTask({
+          id: Number(params.id),
+          userId: user.id,
+          title,
+          description,
+          dueDate: formattedDueDate,
+          status,
+        })
+      );
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
     return "updated task";
   };
 
@@ -99,7 +137,7 @@ const UpdateTaskForm: React.FC = () => {
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="dueDate"
                 type="date"
-                value={dueDate}
+                value={formatDateYYYYMMDD(dueDate)}
                 onChange={(e) => setDueDate(e.target.value)}
               />
             </div>

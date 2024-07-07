@@ -9,6 +9,9 @@ import CreateTaskForm from "./pages/CreateTaskForm";
 import UpdateTaskForm from "./pages/UpdateTaskForm";
 import ErrorPage from "./pages/ErrorPage";
 import Layout from "./Layout";
+import { useSelector } from "react-redux";
+import { AppRootState } from "./Redux/storeConfig";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const location = useLocation();
@@ -16,16 +19,20 @@ function App() {
   const excludedPaths = ["/login", "/signup"];
   const excludeComponent = !excludedPaths.includes(currentPage);
 
+  const user = useSelector((state: AppRootState) => state.user);
+
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       {excludeComponent && <Navbar />}
-      <div className="h-screen">
+      <div className="flex-grow">
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/tasks/:id" element={<TaskDetails />} />
-            <Route path="/tasks/create" element={<CreateTaskForm />} />
-            <Route path="/tasks/update/:id" element={<UpdateTaskForm />} />
+            <Route element={<ProtectedRoute user={user} />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/tasks/:id" element={<TaskDetails />} />
+              <Route path="/tasks/create" element={<CreateTaskForm />} />
+              <Route path="/tasks/update/:id" element={<UpdateTaskForm />} />
+            </Route>
             <Route path="*" element={<ErrorPage />} />
           </Route>
           <Route path="/login" element={<Login />} />
@@ -33,7 +40,7 @@ function App() {
         </Routes>
       </div>
       {excludeComponent && <Footer />}
-    </>
+    </div>
   );
 }
 

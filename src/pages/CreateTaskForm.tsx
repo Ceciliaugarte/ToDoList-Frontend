@@ -1,40 +1,52 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-interface Task {
-  title: string;
-  description: string;
-  dueDate: string;
-}
+import { useDispatch, useSelector } from "react-redux";
+import { AppRootState } from "../Redux/storeConfig";
+import { createUserTask } from "../Redux/reducers/userReducer";
 
 const CreateTaskForm: React.FC = () => {
+  const user = useSelector((state: AppRootState) => state.user);
+
   const navigate = useNavigate();
-  const [task, setTask] = useState<Task>({
-    title: "",
-    description: "",
-    dueDate: "",
-  });
+  const dispatch = useDispatch();
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setTask((prevTask) => ({
-      ...prevTask,
-      [name]: value,
-    }));
-  };
+  const [title, setTitle] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [dueDate, setDueDate] = useState<string>("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Task Created:", task);
-    // lógica para manejar la creación de la tarea
+    try {
+      const formattedDueDate =
+        new Date(dueDate).toISOString().split(".")[0] + "Z";
+      const response = await axios({
+        method: "POST",
+        url: `${import.meta.env.VITE_API_URL}/tasks`,
+        data: {
+          userId: user.id,
+          title,
+          description,
+          dueDate: formattedDueDate,
+        },
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      dispatch(createUserTask(response.data));
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+    setTitle("");
+    setDescription("");
+    setDueDate("");
     navigate("/");
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <div className="w-full max-w-md p-8 border border-gray-300 rounded-lg shadow-md">
+      <div className="w-full max-w-md  bg-gray-100 p-8 border border-gray-300 rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-center mb-6">Create new task</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -50,8 +62,8 @@ const CreateTaskForm: React.FC = () => {
               name="title"
               type="text"
               placeholder="Title"
-              value={task.title}
-              onChange={handleChange}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div className="mb-4">
@@ -66,8 +78,8 @@ const CreateTaskForm: React.FC = () => {
               id="description"
               name="description"
               placeholder="Description"
-              value={task.description}
-              onChange={handleChange}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
           <div className="mb-6">
@@ -82,8 +94,8 @@ const CreateTaskForm: React.FC = () => {
               id="dueDate"
               name="dueDate"
               type="date"
-              value={task.dueDate}
-              onChange={handleChange}
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
             />
           </div>
           <div className="flex flex-col justify-center ">

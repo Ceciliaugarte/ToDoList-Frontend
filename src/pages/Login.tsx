@@ -7,6 +7,8 @@ import { getLoggedUser } from "../Redux/reducers/userReducer";
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -21,7 +23,7 @@ const Login: React.FC = () => {
       dispatch(getLoggedUser(response.data));
       navigate("/");
     } catch (error) {
-      console.log(error);
+      setErrorMessage("Invalid username or password");
     }
     setUsername("");
     setPassword("");
@@ -49,7 +51,7 @@ const Login: React.FC = () => {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
-            <div className="mb-6">
+            <div className="mb-1">
               <label
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="password"
@@ -63,8 +65,11 @@ const Login: React.FC = () => {
                 placeholder="Ex: 1234"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-              />
+              />{" "}
             </div>
+            {errorMessage && ( // Mostrar el mensaje de error si existe
+              <p className="text-red-500 text-center mb-4">{errorMessage}</p>
+            )}
             <div className="flex items-center justify-between">
               <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"

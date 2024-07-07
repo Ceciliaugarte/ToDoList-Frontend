@@ -18,14 +18,11 @@ const Navbar: React.FC = () => {
       className="bg-cover bg-center"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="flex justify-between bg-black bg-opacity-20 py-4 px-4">
-        <Link to="/" className="font-bold font-mono text-3xl">
+      <div className="flex justify-between bg-black bg-opacity-20 py-4 px-6">
+        <Link to="/" className="font-bold font-mono text-3xl text-zinc-200">
           TO DO LIST
         </Link>
-        <button
-          className="text-lg hover:underline font-semibold"
-          onClick={manageLogout}
-        >
+        <button className="text-lg hover:underline" onClick={manageLogout}>
           Logout
         </button>
       </div>

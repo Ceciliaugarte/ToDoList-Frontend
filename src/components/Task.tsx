@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { formatDate } from "../utils/dateUtils";
+import { formatDateDDMMYYYY } from "../utils/dateUtils";
 import { Task as TaskType } from "../types/task";
 import axios from "axios";
 import { User as UserType } from "../types/user";
 import { useDispatch } from "react-redux";
-import { deleteTask } from "../Redux/reducers/taskReducer";
+import { deleteTask } from "../Redux/reducers/userReducer";
 
 interface TaskProps {
   task: TaskType;
@@ -25,7 +25,6 @@ const Task: React.FC<TaskProps> = ({ task, user }) => {
         },
       });
       dispatch(deleteTask(task.id));
-      console.log("Task deleted");
     } catch (error) {
       console.log(error);
     }
@@ -34,15 +33,15 @@ const Task: React.FC<TaskProps> = ({ task, user }) => {
   return (
     <div className="bg-black bg-opacity-20 rounded-lg shadow-lg mb-4 p-4">
       <div className="flex flex-row justify-between py-2 px-2 border-b-2 border-black">
-        <h3 className="font-bold">{task.title}</h3>
-        <span>
+        <h3 className="font-bold truncate w-4/5">Title: {task.title}</h3>
+        <div className="flex items-center space-x-2">
           <Link to={`/tasks/update/${task.id}`}>
             <i className="fa-solid fa-pen-to-square"></i>
           </Link>
           <button type="button" onClick={() => manageDeletingTask()}>
             <i className="px-2 fa-solid fa-trash"></i>
           </button>
-        </span>
+        </div>
       </div>
       <Link
         to={`/tasks/${task.id}`}
@@ -51,7 +50,7 @@ const Task: React.FC<TaskProps> = ({ task, user }) => {
         Details
       </Link>
       <h4 className="py-4 px-2 font-bold">
-        STATUS:{" "}
+        Status:{" "}
         <span
           className={`${
             task.status === "pending" ? "text-red-700" : "text-green-700"
@@ -61,7 +60,7 @@ const Task: React.FC<TaskProps> = ({ task, user }) => {
         </span>
       </h4>
       <h5 className="py-4 px-2 font-bold">
-        DUE DATE: {formatDate(task.dueDate)}
+        Due date: {formatDateDDMMYYYY(task.dueDate)}
       </h5>
     </div>
   );

@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppRootState } from "../Redux/storeConfig";
 import { Task } from "../types/task";
-import { formatDate } from "../utils/dateUtils";
+import { formatDateDDMMYYYY } from "../utils/dateUtils";
+import { deleteTask } from "../Redux/reducers/userReducer";
 
 const TaskDetails: React.FC = () => {
   const user = useSelector((state: AppRootState) => state.user);
@@ -12,6 +13,7 @@ const TaskDetails: React.FC = () => {
 
   const params = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getCurrentTask = async () => {
@@ -35,6 +37,29 @@ const TaskDetails: React.FC = () => {
     getCurrentTask();
   }, [params.id, user]);
 
+  const manageDeletingTask = async () => {
+    if (!currentTask) {
+      return;
+    }
+    try {
+      await axios({
+        method: "DELETE",
+        url: `${import.meta.env.VITE_API_URL}/tasks/${currentTask.id}`,
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+      dispatch(deleteTask(currentTask.id));
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (!currentTask) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="flex flex-col min-h-screen py-8 px-4">
       <div className="flex justify-center items-center ">
@@ -46,16 +71,21 @@ const TaskDetails: React.FC = () => {
               <Link to={`/tasks/update/${currentTask.id}`}>
                 <i className="fa-solid fa-pen-to-square text-2xl"></i>
               </Link>
-              <i className="ps-4 fa-solid fa-trash text-2xl"></i>
+              <button type="button" onClick={() => manageDeletingTask()}>
+                <i className="ps-4 fa-solid fa-trash text-2xl"></i>
+              </button>
             </span>
             <div className="bg-black bg-opacity-20 rounded-lg shadow-lg p-4">
               <div className="py-2 px-4 border-b-2 border-black">
-                <h3 className="font-bold">{currentTask.title}</h3>
+                <h3 className="font-bold break-words ">
+                  Title: {currentTask.title}
+                </h3>
               </div>
-              <div className="py-4 px-4 font-bold">
-                {currentTask.description}
+              <div className="py-4 px-4 font-bold break-words">
+                Description: {currentTask.description}
               </div>
               <h4 className="py-4 px-4 font-bold">
+                Status:
                 <span
                   className={`${
                     currentTask.status === "pending"
@@ -63,11 +93,12 @@ const TaskDetails: React.FC = () => {
                       : "text-green-700"
                   }`}
                 >
+                  {" "}
                   {currentTask.status}
                 </span>
               </h4>
               <h5 className="py-4 px-4 font-bold">
-                {formatDate(currentTask.dueDate)}
+                Due date: {formatDateDDMMYYYY(currentTask.dueDate)}
               </h5>
             </div>
           </div>
