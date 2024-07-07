@@ -36,6 +36,12 @@ cd ToDoList-Frontend
 ```bash
 npm install
 ```
+
+- Create a .env file to write your enviroment variables
+
+- Create a variable called `VITE_API_URL` to connect it to your backend project
+
+
 - Run the command
 
 ```bash
@@ -50,6 +56,13 @@ npm run dev
 - `GET /tasks/:id` | Task details page 
 - `GET /tasks/create` | Create a task form
 - `GET /tasks/update/:id` | Update a task form
+
+
+## Enviroment variables:
+
+Make sure you have these variables in your .env file:
+
+`VITE_API_URL`
 
 
 
