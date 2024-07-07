@@ -39,7 +39,7 @@ npm install
 
 - Create a .env file to write your enviroment variables
 
-- Create a variable called `VITE_API_URL` to connect it to your backend project
+- Create a variable called VITE_API_URL to connect it to your backend project, as shown in the .env.example file.
 
 
 - Run the command
