@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppRootState } from "../Redux/storeConfig";
 import { formatDateYYYYMMDD } from "../utils/dateUtils";
 import { updateUserTask } from "../Redux/reducers/userReducer";
+import { toast } from "react-toastify";
 
 interface Task {
   title: string;
@@ -82,6 +83,7 @@ const UpdateTaskForm: React.FC = () => {
           status,
         })
       );
+      toast.success("Task updated successfully!");
       navigate("/");
     } catch (error) {
       console.log(error);

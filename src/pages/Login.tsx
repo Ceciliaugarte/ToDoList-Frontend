@@ -67,7 +67,7 @@ const Login: React.FC = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />{" "}
             </div>
-            {errorMessage && ( // Mostrar el mensaje de error si existe
+            {errorMessage && (
               <p className="text-red-500 text-center mb-4">{errorMessage}</p>
             )}
             <div className="flex items-center justify-between">

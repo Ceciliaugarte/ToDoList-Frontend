@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppRootState } from "../Redux/storeConfig";
 import { createUserTask } from "../Redux/reducers/userReducer";
+import { toast } from "react-toastify";
 
 const CreateTaskForm: React.FC = () => {
   const user = useSelector((state: AppRootState) => state.user);
@@ -34,6 +35,7 @@ const CreateTaskForm: React.FC = () => {
         },
       });
       dispatch(createUserTask(response.data));
+      toast.success("Task created successfully!");
       navigate("/");
     } catch (error) {
       console.log(error);

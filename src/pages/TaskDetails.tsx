@@ -6,6 +6,7 @@ import { AppRootState } from "../Redux/storeConfig";
 import { Task } from "../types/task";
 import { formatDateDDMMYYYY } from "../utils/dateUtils";
 import { deleteTask } from "../Redux/reducers/userReducer";
+import { toast } from "react-toastify";
 
 const TaskDetails: React.FC = () => {
   const user = useSelector((state: AppRootState) => state.user);
@@ -50,6 +51,7 @@ const TaskDetails: React.FC = () => {
         },
       });
       dispatch(deleteTask(currentTask.id));
+      toast.success("Task deleted successfully!");
       navigate("/");
     } catch (error) {
       console.log(error);

@@ -6,6 +6,7 @@ import axios from "axios";
 import { User as UserType } from "../types/user";
 import { useDispatch } from "react-redux";
 import { deleteTask } from "../Redux/reducers/userReducer";
+import { toast } from "react-toastify";
 
 interface TaskProps {
   task: TaskType;
@@ -25,6 +26,7 @@ const Task: React.FC<TaskProps> = ({ task, user }) => {
         },
       });
       dispatch(deleteTask(task.id));
+      toast.success("Task deleted successfully!");
     } catch (error) {
       console.log(error);
     }

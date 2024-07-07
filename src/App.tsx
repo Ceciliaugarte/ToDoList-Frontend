@@ -12,6 +12,7 @@ import Layout from "./Layout";
 import { useSelector } from "react-redux";
 import { AppRootState } from "./Redux/storeConfig";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ToastConfig from "./components/Toasts/ToastConfig";
 
 function App() {
   const location = useLocation();
@@ -40,6 +41,7 @@ function App() {
         </Routes>
       </div>
       {excludeComponent && <Footer />}
+      <ToastConfig />
     </div>
   );
 }
