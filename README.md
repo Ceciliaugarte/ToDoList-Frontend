@@ -13,8 +13,8 @@ To do list is a project to save daily tasks, in which each user has his dashboar
 
 ## Features:
 - Create a user
-- Login in the account
-- See the tasks and its status(pending/completed)
+- Login to the account
+- View tasks and their status(pending/completed)
 - Create a new task
 - Update a task
 - Deleting a task
@@ -42,7 +42,7 @@ npm install
 - Create a variable called VITE_API_URL to connect it to your backend project, as shown in the .env.example file.
 
 
-- Run the command
+- Run the development server
 
 ```bash
 npm run dev
