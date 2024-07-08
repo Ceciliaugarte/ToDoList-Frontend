@@ -1,7 +1,7 @@
 # TO DO LIST -FRONTEND
 
 ## Description:
-To do list is a project to save daily tasks, in which each user has his dashboard with their tasks.
+To Do List is a project designed to manage daily tasks. Each user has access to their dashboard where they can view and manage their tasks.
 
 ## Technologies used:
 - React
@@ -10,6 +10,15 @@ To do list is a project to save daily tasks, in which each user has his dashboar
 - React Router DOM
 - Redux (for state management)
 - Axios (for API requests)
+
+  
+## Architecture:
+
+### General Overview
+The frontend is built using React, Tailwind CSS used for styling, providing a utility-first approach for designing components. Redux is utilized for managing application state, allowing centralized data management across components. React Router DOM handles navigation within the application, enabling routing between different pages.
+
+### Security:
+Security is managed using JSON Web Tokens (JWT) for user authentication. JWT tokens are stored locally and included in API requests to authenticate users and securely grant access to their data and actions.
 
 ## Features:
 - Create a user
